@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Задачи</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Sync Status Indicator -->
+    <div id="syncStatus" class="sync-status">
+        <span id="syncText">Синхронизировано</span>
+    </div>
+
+    <!-- Main Container -->
+    <div id="app" class="app-container">
+        
+        <!-- Tasks View -->
+        <div id="tasksView" class="view active">
+            <div class="view-header">
+                <h1>Задачи</h1>
+                <input type="date" id="dateSelector" class="date-selector">
+            </div>
+            <div class="tasks-container" id="tasksContainer">
+                <!-- Tasks will be inserted here -->
+            </div>
+            <button class="fab" id="addTaskBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </div>
+
+        <!-- Completed View -->
+        <div id="completedView" class="view">
+            <div class="view-header">
+                <h1>Выполненные</h1>
+            </div>
+            <div class="tasks-container" id="completedContainer">
+                <!-- Completed tasks will be inserted here -->
+            </div>
+        </div>
+
+        <!-- Pomodoro View -->
+        <div id="pomodoroView" class="view">
+            <div class="view-header">
+                <h1>Помодоро</h1>
+            </div>
+            <div class="pomodoro-container">
+                <div class="pomodoro-circle">
+                    <svg class="progress-ring" width="280" height="280">
+                        <circle class="progress-ring-bg" cx="140" cy="140" r="120"></circle>
+                        <circle class="progress-ring-progress" cx="140" cy="140" r="120" id="progressCircle"></circle>
+                    </svg>
+                    <div class="pomodoro-content">
+                        <div class="pomodoro-time" id="pomodoroTime">25:00</div>
+                        <div class="pomodoro-session" id="pomodoroSession">Работа</div>
+                    </div>
+                </div>
+                <div class="pomodoro-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Сессий завершено</span>
+                        <span class="stat-value" id="completedSessions">0</span>
+                    </div>
+                </div>
+                <div class="pomodoro-controls">
+                    <button class="btn-primary" id="pomodoroStart">Старт</button>
+                    <button class="btn-secondary" id="pomodoroReset">Сброс</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ideas View -->
+        <div id="ideasView" class="view">
+            <div class="view-header">
+                <h1>Идеи</h1>
+            </div>
+            <div class="ideas-container" id="ideasContainer">
+                <!-- Ideas will be inserted here -->
+            </div>
+            <button class="fab" id="addIdeaBtn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </div>
+
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active" data-view="tasks">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M9 11l3 3L22 4"></path>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"></path>
+            </svg>
+            <span>Задачи</span>
+        </button>
+        <button class="nav-item" data-view="completed">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>Выполненные</span>
+        </button>
+        <button class="nav-item" data-view="pomodoro">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+            <span>Помодоро</span>
+        </button>
+        <button class="nav-item" data-view="ideas">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+            </svg>
+            <span>Идеи</span>
+        </button>
+    </nav>
+
+    <!-- Modal for Adding Task -->
+    <div id="taskModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Добавить задачу</h2>
+                <button class="close-btn" id="closeTaskModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Название</label>
+                    <input type="text" id="taskTitle" class="form-input" placeholder="Введите название задачи">
+                </div>
+                <div class="form-group">
+                    <label>Дата</label>
+                    <input type="date" id="taskDate" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label>Время (необязательно)</label>
+                    <input type="time" id="taskTime" class="form-input">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelTask">Отмена</button>
+                <button class="btn-primary" id="saveTask">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for Adding Idea -->
+    <div id="ideaModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="ideaModalTitle">Добавить идею</h2>
+                <button class="close-btn" id="closeIdeaModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label>Название идеи</label>
+                    <input type="text" id="ideaTitle" class="form-input" placeholder="Введите название">
+                </div>
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea id="ideaDescription" class="form-input" rows="3" placeholder="Опишите вашу идею"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Как реализовать</label>
+                    <textarea id="ideaImplementation" class="form-input" rows="4" placeholder="Шаги для реализации"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Статус</label>
+                    <select id="ideaStatus" class="form-input">
+                        <option value="new">Новая</option>
+                        <option value="in-progress">В процессе</option>
+                        <option value="implemented">Реализована</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelIdea">Отмена</button>
+                <button class="btn-primary" id="saveIdea">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
